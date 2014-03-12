@@ -24,6 +24,7 @@ class Snippet(models.Model):
     )
 
     secret_id = models.CharField(_(u'Secret ID'), max_length=255, blank=True, null=True)
+    author = models.CharField(_(u"Author"), max_length=255, blank=True, null=True, default='')
     content = models.TextField(_(u'Content'))
     lexer = models.CharField(_(u'Lexer'), max_length=30, default=LEXER_DEFAULT)
     published = models.DateTimeField(_(u'Published'), auto_now_add=True)

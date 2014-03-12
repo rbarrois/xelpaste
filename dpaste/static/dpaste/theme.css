@@ -84,6 +84,11 @@ h1, h2, h3, h4 {
     float: left;
 }
 
+.form-options-author {
+    float: left;
+    margin-left: 10px;
+}
+
 .form-options-expire {
     float: right;
 }

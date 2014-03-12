@@ -27,6 +27,12 @@ class SnippetForm(forms.ModelForm):
         initial=settings.DPASTE_EXPIRE_DEFAULT,
     )
 
+    author = forms.CharField(
+        label=_(u"Author"),
+        widget=forms.TextInput(),
+        max_length=255,
+    )
+
     # Honeypot field
     title = forms.CharField(
         label=_(u'Title'),
@@ -39,6 +45,7 @@ class SnippetForm(forms.ModelForm):
         fields = (
             'content',
             'lexer',
+            'author',
         )
 
     def __init__(self, request, *args, **kwargs):
@@ -49,6 +56,10 @@ class SnippetForm(forms.ModelForm):
         session_lexer = self.request.session.get('lexer')
         if session_lexer and session_lexer in LEXER_KEYS:
             self.fields['lexer'].initial = session_lexer
+
+        session_author = self.request.session.get('author')
+        if session_author:
+            self.fields['author'].initial = session_author
 
         # if the lexer is given via GET, set it
         if 'l' in request.GET and request.GET['l'] in LEXER_KEYS:
@@ -108,5 +119,8 @@ class SnippetForm(forms.ModelForm):
 
         # Save the lexer in the session so we can use it later again
         self.request.session['lexer'] = self.cleaned_data['lexer']
+
+        if self.cleaned_data['author']:
+            self.request.session['author'] = self.cleaned_data['author']
 
         return self.instance

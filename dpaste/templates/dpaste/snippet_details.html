@@ -6,7 +6,7 @@
 {% load url from future %}
 
 {% block title %}{% trans "Snippet" %} #{{ snippet.pk }}{% endblock %}
-{% block headline %}{% trans "Snippet" %} #{{ snippet.pk }}{% endblock %}
+{% block headline %}{% trans "Snippet" %} #{{ snippet.pk }} ({% if snippet.author %}{% trans "by" %} {{ snippet.author }}, {% endif %}{{ snippet.lexer }}){% endblock %}
 
 {% block page %}
 

@@ -1,4 +1,17 @@
+# Temporary files
+.*.swp
 *.pyc
-dpaste/settings/local.py
-dpaste.egg-info
-docs/_build
+*.pyo
+
+# Dev-related files
+dev.db
+dev/private/
+
+# Build-related files
+doc/_build/
+.coverage
+*.egg-info
+build/
+dist/
+htmlcov/
+MANIFEST

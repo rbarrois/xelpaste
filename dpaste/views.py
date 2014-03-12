@@ -212,7 +212,7 @@ def snippet_gist(request, snippet_id): # pragma: no cover
         'description': 'the description for this gist',
         'public': False,
         'files': {
-            'dpaste.de_snippet.py': {
+            '%s_snippet.py' % settings.DPASTE_DOMAIN: {
                 'content': snippet.content,
             }
         }

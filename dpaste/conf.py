@@ -12,6 +12,7 @@ class DPasteConf(appconf.AppConf):
         prefix = 'dpaste'
 
     BASE_URL = 'https://dpaste.de'
+    DOMAIN = 'dpaste.de'
 
     # Expiry
     EXPIRE_CHOICES = (

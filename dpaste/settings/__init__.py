@@ -91,6 +91,7 @@ MIDDLEWARE_CLASSES = (
 
 TEMPLATE_CONTEXT_PROCESSORS += (
     'django.core.context_processors.request',
+    'dpaste.context_processors.dpaste_settings',
 )
 
 INSTALLED_APPS = (

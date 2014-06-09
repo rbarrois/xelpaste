@@ -78,6 +78,9 @@ LOGIN_URL = '/accounts/login/'
 LOGOUT_URL = '/accounts/logout/'
 LOGIN_REDIRECT_URL = '/'
 
+
+SENDFILE_BACKEND = 'sendfile.backends.simple'
+
 #==============================================================================
 # Templates
 #==============================================================================

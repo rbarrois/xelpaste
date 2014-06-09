@@ -36,6 +36,7 @@ class DPasteConf(appconf.AppConf):
     BADWORD_TRIGGERS = {
         'http': 5,
     }
+    MAX_FILE_LENGTH = 10 * 1024 * 1024  # 10MB
 
     # Users
     MAX_SNIPPETS_PER_USER = 15

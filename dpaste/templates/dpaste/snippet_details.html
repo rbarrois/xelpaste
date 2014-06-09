@@ -89,7 +89,15 @@
     <!-- ======================================================================
     Snippet
     ======================================================================= -->
-    {% if snippet.lexer == 'text' %}
+    {% if snippet.file %}
+      <div class="snippet-rendered">
+      {% if snippet.is_image %}
+          <img src="{% url 'snippet_details_raw' snippet.secret_id %}">
+      {% else %}
+          <a href="{% url 'snippet_details_raw' snippet.secret_id %}">{% trans "Download" %}</a>
+      {% endif %}
+      </div>
+    {% elif snippet.lexer == 'text' %}
     <div class="snippet-rendered">
         {{ snippet.content|linebreaksbr }}
     </div>
@@ -102,7 +110,7 @@
     ======================================================================= -->
     <div class="snippet-reply snippet-reply-hidden">
         <h3>{% trans "Reply to this snippet" %} &rarr;</h3>
-        {% include "dpaste/snippet_form.html" %}
+        {% include "dpaste/snippet_form.html" with multipart=1 %}
     </div>
 {% endblock %}
 

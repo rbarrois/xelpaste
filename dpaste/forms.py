@@ -8,13 +8,8 @@ from dpaste.models import Snippet
 from dpaste.highlight import LEXER_LIST, LEXER_DEFAULT, LEXER_KEYS
 
 
-class SnippetForm(forms.ModelForm):
-    content = forms.CharField(
-        label=_('Content'),
-        widget=forms.Textarea(attrs={'placeholder': _('Awesome code goes here...')}),
-        max_length=settings.DPASTE_MAX_CONTENT_LENGTH,
-    )
 
+class BaseSnippetForm(forms.ModelForm):
     lexer = forms.ChoiceField(
         label=_(u'Lexer'),
         initial=LEXER_DEFAULT,
@@ -48,14 +43,9 @@ class SnippetForm(forms.ModelForm):
 
     class Meta:
         model = Snippet
-        fields = (
-            'content',
-            'lexer',
-            'author',
-        )
 
     def __init__(self, request, *args, **kwargs):
-        super(SnippetForm, self).__init__(*args, **kwargs)
+        super(BaseSnippetForm, self).__init__(*args, **kwargs)
         self.request = request
         self.likely_spam = False
 
@@ -72,21 +62,11 @@ class SnippetForm(forms.ModelForm):
         if 'l' in request.GET and request.GET['l'] in LEXER_KEYS:
             self.fields['lexer'].initial = request.GET['l']
 
-    def clean_content(self):
-        content = self.cleaned_data.get('content', '')
-        if content.strip() == '':
-            raise forms.ValidationError(_('Plesae fill out this field.'))
-        return content
-
     def clean(self):
         # The `title` field is a hidden honeypot field. If its filled,
         # this is likely spam.
         if self.cleaned_data.get('title'):
             raise forms.ValidationError('This snippet was identified as Spam.')
-        for badword, trigger in settings.DPASTE_BADWORD_TRIGGERS.items():
-            if self.cleaned_data['content'].count(badword) >= trigger and not self.cleaned_data['not_spam']:
-                self.likely_spam = True
-                self._errors['content'] = self.error_class([_("This snippet looks like spam.")])
         return self.cleaned_data
 
     def clean_expires(self):
@@ -118,7 +98,7 @@ class SnippetForm(forms.ModelForm):
                 datetime.timedelta(seconds=int(expires))
 
         # Save snippet in the db
-        super(SnippetForm, self).save(*args, **kwargs)
+        super(BaseSnippetForm, self).save(*args, **kwargs)
 
         # Add the snippet to the user session list
         if self.request.session.get('snippet_list', False):
@@ -135,3 +115,68 @@ class SnippetForm(forms.ModelForm):
             self.request.session['author'] = self.cleaned_data['author']
 
         return self.instance
+
+
+class SnippetForm(BaseSnippetForm):
+    content = forms.CharField(
+        label=_('Content'),
+        widget=forms.Textarea(attrs={'placeholder': _('Awesome code goes here...')}),
+        max_length=settings.DPASTE_MAX_CONTENT_LENGTH,
+    )
+
+    class Meta(BaseSnippetForm.Meta):
+        fields = (
+            'content',
+            'lexer',
+            'author',
+        )
+
+    def clean_content(self):
+        content = self.cleaned_data.get('content', '')
+        if content.strip() == '':
+            raise forms.ValidationError(_('Please fill out this field.'))
+        return content
+
+    def clean(self):
+        cleaned_data = super(SnippetForm, self).clean()
+        for badword, trigger in settings.DPASTE_BADWORD_TRIGGERS.items():
+            if self.cleaned_data['content'].count(badword) >= trigger and not self.cleaned_data['not_spam']:
+                self.likely_spam = True
+                self._errors['content'] = self.error_class([_("This snippet looks like spam.")])
+        return cleaned_data
+
+
+class SnippetUploadForm(BaseSnippetForm):
+    file = forms.FileField(
+        label=_('File'),
+        max_length=settings.DPASTE_MAX_FILE_LENGTH,
+    )
+
+    class Meta(BaseSnippetForm.Meta):
+        fields = (
+            'file',
+            'lexer',
+            'author',
+        )
+
+    def clean_file(self):
+        fd = self.cleaned_data.get('file')
+        if fd is not None:
+            content = fd.read()
+            fd.seek(0)
+            if content.strip() == '':
+                raise forms.ValidationError(_('Please fill out this field.'))
+        return fd
+
+    def save(self, parent=None, *args, **kwargs):
+        # File descriptor from form contains content type.
+        fd = self.cleaned_data['file']
+
+        # Using file upload for copy/pasting a whole file
+        if fd.content_type.startswith('text/'):
+            self.instance.content = fd.read()
+            self.instance.file = None
+        else:
+            self.instance.content_type = fd.content_type
+
+        return super(SnippetUploadForm, self).save(parent, *args, **kwargs)

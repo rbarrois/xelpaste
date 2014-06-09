@@ -13,6 +13,7 @@ R = SystemRandom()
 def generate_secret_id(length=settings.DPASTE_SLUG_LENGTH, alphabet=settings.DPASTE_SLUG_CHOICES):
     return ''.join([R.choice(alphabet) for i in range(length)])
 
+
 class Snippet(models.Model):
     EXPIRE_TIME = 1
     EXPIRE_KEEP = 2
@@ -33,6 +34,9 @@ class Snippet(models.Model):
     expires = models.DateTimeField(_(u'Expires'), blank=True, null=True)
     view_count = models.PositiveIntegerField(_('View count'), default=0)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
+    file = models.FileField(
+        _(u"File"), upload_to=settings.MEDIA_ROOT, max_length=settings.DPASTE_MAX_FILE_LENGTH, null=True, blank=True)
+    content_type = models.CharField(_(u"Content type"), max_length=255, blank=True, null=True)
 
     class Meta:
         ordering = ('-published',)
@@ -51,6 +55,10 @@ class Snippet(models.Model):
     @property
     def is_single(self):
         return self.is_root_node() and not self.get_children()
+
+    @property
+    def is_image(self):
+        return self.content_type.startswith("image/") if self.content_type else False
 
     def save(self, *args, **kwargs):
         if not self.secret_id:

@@ -1,7 +1,10 @@
 import datetime
 import difflib
-import requests
 import json
+import os
+
+import requests
+import sendfile
 
 from django.shortcuts import (render_to_response, get_object_or_404)
 from django.template.context import RequestContext
@@ -16,7 +19,7 @@ from django.views.defaults import (page_not_found as django_page_not_found,
 from django.views.decorators.csrf import csrf_exempt
 
 from dpaste.conf import settings
-from dpaste.forms import SnippetForm
+from dpaste.forms import SnippetForm, SnippetUploadForm
 from dpaste.models import Snippet
 from dpaste.highlight import LEXER_WORDWRAP, LEXER_LIST
 from dpaste.highlight import LEXER_DEFAULT, LEXER_KEYS
@@ -51,6 +54,33 @@ def snippet_new(request, template_name='dpaste/snippet_new.html'):
     )
 
 
+def snippet_upload(request, template_name='dpaste/snippet_upload.html'):
+    """
+    Upload an existing snippet.
+    """
+    if request.method == "POST":
+        snippet_form = SnippetUploadForm(data=request.POST, files=request.FILES, request=request)
+        if snippet_form.is_valid():
+            new_snippet = snippet_form.save()
+            url = new_snippet.get_absolute_url()
+            return HttpResponseRedirect(url)
+        else:
+            pass
+    else:
+        snippet_form = SnippetUploadForm(request=request)
+
+    template_context = {
+        'snippet_form': snippet_form,
+        'is_new': True,
+    }
+
+    return render_to_response(
+        template_name,
+        template_context,
+        RequestContext(request),
+    )
+
+
 def snippet_details(request, snippet_id, template_name='dpaste/snippet_details.html', is_raw=False):
     """
     Details list view of a snippet. Handles the actual view, reply and
@@ -68,6 +98,10 @@ def snippet_details(request, snippet_id, template_name='dpaste/snippet_details.h
     snippet.view_count += 1
     snippet.save()
 
+    # When rendering binary snippet, let the front-end server serve the media
+    if snippet.file and is_raw:
+        return sendfile.sendfile(request, snippet.file.name)
+
     tree = snippet.get_root()
     tree = tree.get_descendants(include_self=True)
 
@@ -76,9 +110,13 @@ def snippet_details(request, snippet_id, template_name='dpaste/snippet_details.h
         'lexer': snippet.lexer,
     }
 
+    form_class = SnippetForm
+    if snippet.file:
+        form_class = SnippetUploadForm
     if request.method == "POST":
-        snippet_form = SnippetForm(
+        snippet_form = form_class(
             data=request.POST,
+            files=request.FILES,
             request=request,
             initial=new_snippet_initial)
         if snippet_form.is_valid():
@@ -86,7 +124,7 @@ def snippet_details(request, snippet_id, template_name='dpaste/snippet_details.h
             url = new_snippet.get_absolute_url()
             return HttpResponseRedirect(url)
     else:
-        snippet_form = SnippetForm(
+        snippet_form = form_class(
             initial=new_snippet_initial,
             request=request)
 

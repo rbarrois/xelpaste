@@ -1,11 +1,23 @@
 {% load i18n %}
 {% load url from future %}
 
-<form method="post" action="" class="form-horizontal">
+<form method="post" action="" class="form-horizontal" {% if multipart %}enctype="multipart/form-data"{% endif %}>
     {% csrf_token %}
     {{ snippet_form.non_field_errors }}
     <div style="display: none;">{{ snippet_form.title }}</div>
 
+    {% if snippet_form.file %}
+    <div class="
+        control-group
+        form-content
+        superenter
+        {% if is_new %}autofocus{% endif %}
+        {% if snippet_form.file.errors %}error{% endif %}
+    ">
+        {{ snippet_form.file }}
+    </div>
+
+    {% else %}
     <div class="
         control-group
         form-content
@@ -18,6 +30,7 @@
         <span class="help-inline">{{ error }}</span>
         {% endfor %}
     </div>
+    {% endif %}
 
     {% if snippet_form.likely_spam %}
     <div class="form-options-spam control-group">

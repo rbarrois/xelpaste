@@ -8,7 +8,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding field 'Snippet.file'
         db.add_column('dpaste_snippet', 'file',
-                      self.gf('django.db.models.fields.files.FileField')(max_length=262144000, null=True, blank=True),
+                      self.gf('django.db.models.fields.files.FileField')(max_length=255, null=True, blank=True),
                       keep_default=False)
 
         # Adding field 'Snippet.content_type'

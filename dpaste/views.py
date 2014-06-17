@@ -101,7 +101,7 @@ def snippet_details(request, snippet_id, template_name='dpaste/snippet_details.h
 
     # When rendering binary snippet, let the front-end server serve the media
     if snippet.file and is_raw:
-        return sendfile.sendfile(request, snippet.file.name)
+        return sendfile.sendfile(request, snippet.file.storage.path(snippet.file.name))
 
     tree = snippet.get_root()
     tree = tree.get_descendants(include_self=True)

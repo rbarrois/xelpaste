@@ -20,6 +20,3 @@ urlpatterns = patterns('dpaste.views',
     url(r'^(?P<snippet_id>[a-zA-Z0-9]{%d})/gist/$' % L, 'snippet_gist', name='snippet_gist'),
     url(r'^(?P<snippet_id>[a-zA-Z0-9]{%d})/raw/?$' % L, 'snippet_details', {'template_name': 'dpaste/snippet_details_raw.html', 'is_raw': True}, name='snippet_details_raw'),
 )
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -37,6 +37,7 @@ class DPasteConf(appconf.AppConf):
         'http': 5,
     }
     MAX_FILE_LENGTH = 10 * 1024 * 1024  # 10MB
+    UPLOADS_ROOT = 'uploads'
 
     # Users
     MAX_SNIPPETS_PER_USER = 15

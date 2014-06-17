@@ -35,7 +35,7 @@ class Snippet(models.Model):
     view_count = models.PositiveIntegerField(_('View count'), default=0)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
     file = models.FileField(
-        _(u"File"), upload_to=settings.MEDIA_ROOT, max_length=settings.DPASTE_MAX_FILE_LENGTH, null=True, blank=True)
+        _(u"File"), upload_to=settings.DPASTE_UPLOADS_ROOT, max_length=settings.DPASTE_MAX_FILE_LENGTH, null=True, blank=True)
     content_type = models.CharField(_(u"Content type"), max_length=255, blank=True, null=True)
 
     class Meta:

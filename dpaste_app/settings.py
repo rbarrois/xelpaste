@@ -33,9 +33,19 @@ else:
 
 SECRET_KEY = config.get('django.secret_key', _default_secret_key)
 
+
+# Debug
+# =====
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config.getbool('dev.debug', env == 'dev')
 TEMPLATE_DEBUG = DEBUG
+
+if config.get('dev.admin_mail'):
+    ADMINS = (
+        ("Xelpaste admins", config.get('dev.admin_mail')),
+    )
+
 
 
 # URLs

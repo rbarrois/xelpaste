@@ -1,6 +1,7 @@
 import datetime
 
 from django import forms
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from dpaste.conf import settings
@@ -94,7 +95,7 @@ class BaseSnippetForm(forms.ModelForm):
 
         expires = self.cleaned_data['expires']
         if expires:
-            self.instance.expires = datetime.datetime.now() + \
+            self.instance.expires = timezone.now() + \
                 datetime.timedelta(seconds=int(expires))
 
         # Save snippet in the db

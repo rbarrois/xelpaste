@@ -11,6 +11,7 @@ from django.template.context import RequestContext
 from django.http import (Http404, HttpResponseRedirect, HttpResponseBadRequest,
     HttpResponse)
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.db.models import Count
@@ -334,7 +335,7 @@ def snippet_api(request):
     s = Snippet.objects.create(
         content=content,
         lexer=lexer,
-        expires=datetime.datetime.now() + datetime.timedelta(seconds=60*60*24*30)
+        expires=timezone.now() + datetime.timedelta(seconds=60*60*24*30)
     )
     s.save()
 

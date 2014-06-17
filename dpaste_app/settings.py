@@ -139,9 +139,10 @@ def parse_size(size):
         return amount
 
 
-DPASTE_UPLOADS_ROOT = config.get('uploads.dir', os.path.join(CHECKOUT_DIR, 'media', 'private'))
+MEDIA_ROOT = config.get('uploads.dir', os.path.join(CHECKOUT_DIR, 'media'))
+DPASTE_UPLOAD_TO = 'snippets'
 SENDFILE_BACKEND = 'sendfile.backends.%s' % config.get('uploads.serve', 'simple')
-SENDFILE_ROOT = DPASTE_UPLOADS_ROOT
+SENDFILE_ROOT = os.path.join(MEDIA_ROOT, DPASTE_UPLOAD_TO)
 SENDFILE_URL = config.get('uploads.internal_url', '/uploads/')
 
 DPASTE_MAX_CONTENT_LENGTH = parse_size(config.get('snippets.max_content', '1MB'))

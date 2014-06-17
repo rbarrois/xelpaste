@@ -33,6 +33,9 @@ class DPasteConf(appconf.AppConf):
     SLUG_LENGTH = 4
     SLUG_CHOICES = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ1234567890'
     MAX_CONTENT_LENGTH = 250 * 1024 * 1024
+    BADWORD_TRIGGERS = {
+        'http': 5,
+    }
 
     # Users
     MAX_SNIPPETS_PER_USER = 15

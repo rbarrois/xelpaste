@@ -33,6 +33,12 @@ class SnippetForm(forms.ModelForm):
         max_length=255,
     )
 
+    not_spam = forms.BooleanField(
+        label=_(u"This is *not* spam"),
+        initial=False,
+        required=False,
+    )
+
     # Honeypot field
     title = forms.CharField(
         label=_(u'Title'),
@@ -51,6 +57,7 @@ class SnippetForm(forms.ModelForm):
     def __init__(self, request, *args, **kwargs):
         super(SnippetForm, self).__init__(*args, **kwargs)
         self.request = request
+        self.likely_spam = False
 
         # Set the recently used lexer if we have any
         session_lexer = self.request.session.get('lexer')
@@ -76,6 +83,10 @@ class SnippetForm(forms.ModelForm):
         # this is likely spam.
         if self.cleaned_data.get('title'):
             raise forms.ValidationError('This snippet was identified as Spam.')
+        for badword, trigger in settings.DPASTE_BADWORD_TRIGGERS.items():
+            if self.cleaned_data['content'].count(badword) >= trigger and not self.cleaned_data['not_spam']:
+                self.likely_spam = True
+                self._errors['content'] = self.error_class([_("This snippet looks like spam.")])
         return self.cleaned_data
 
     def clean_expires(self):

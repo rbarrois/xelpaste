@@ -82,7 +82,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 ROOT_URLCONF = 'dpaste.urls'
 
-if ENVIRONMENT == 'dev':
+if env == 'dev':
     # Avoid the need for collectstatic before running tests
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 else:

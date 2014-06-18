@@ -80,6 +80,10 @@ h1, h2, h3, h4 {
     border-radius: 0;
 }
 
+.form-options-title {
+    visibility: hidden;
+}
+
 .form-options-lexer {
     float: left;
 }

@@ -61,3 +61,21 @@ Valid options are:
 
 ``password``
     ``str``, the password for the database
+
+
+Examples:
+
+.. code-block:: ini
+
+    ; A Postgresql configuration; uses default psql port.
+    [db]
+    engine = postgresql
+    name = xelpaste
+    host = psql42.local
+
+.. code-block:: ini
+
+    ; A sample sqlite configuration.
+    [db]
+    engine = sqlite
+    name = /data/replicated/xelpaste/db.sqlite

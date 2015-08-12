@@ -1,10 +1,10 @@
 [run]
-source = dpaste
+source = xelpaste
 branch = True
 omit =
-    dpaste/migrations/*
-    dpaste/tests/*
-    dpaste/settings/*
+    xelpaste/migrations/*
+    xelpaste/tests/*
+    xelpaste/settings/*
 
 [report]
 exclude_lines =

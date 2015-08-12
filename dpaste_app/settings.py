@@ -65,7 +65,7 @@ INSTALLED_APPS = (
 
     'mptt',
     'south',
-    'dpaste',
+    'xelpaste',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -77,10 +77,10 @@ MIDDLEWARE_CLASSES = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
-    'dpaste.context_processors.dpaste_settings',
+    'xelpaste.context_processors.xelpaste_settings',
 )
 
-ROOT_URLCONF = 'dpaste.urls'
+ROOT_URLCONF = 'xelpaste.urls'
 
 if env == 'dev':
     # Avoid the need for collectstatic before running tests

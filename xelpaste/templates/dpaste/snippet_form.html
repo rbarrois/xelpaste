@@ -1,0 +1,88 @@
+{% load i18n %}
+{% load url from future %}
+
+<form method="post" action="" class="form-horizontal" {% if multipart %}enctype="multipart/form-data"{% endif %}>
+    {% csrf_token %}
+    {{ snippet_form.non_field_errors }}
+    <div class="form-options-title">{{ snippet_form.title }} Honeypot, don't fill.</div>
+
+    {% if snippet_form.file %}
+    <div class="
+        control-group
+        form-content
+        superenter
+        {% if is_new %}autofocus{% endif %}
+        {% if snippet_form.file.errors %}error{% endif %}
+    ">
+        {{ snippet_form.file }}
+    </div>
+
+    {% else %}
+    <div class="
+        control-group
+        form-content
+        superenter
+        {% if is_new %}autofocus{% endif %}
+        {% if snippet_form.content.errors %}error{% endif %}
+    ">
+        {{ snippet_form.content }}
+        {% for error in snippet_form.content.errors %}
+        <span class="help-inline">{{ error }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if snippet_form.likely_spam %}
+    <div class="form-options-spam control-group">
+        <label class="checkbox">
+            {{ snippet_form.not_spam }}
+            {% trans "Nope, that's not spam, I swear." %}
+        </label>
+    </div>
+    {% endif %}
+    <div class="control-group form-options">
+        <div class="form-options-lexer
+            {% if snippet_form.lexer.errors %}control-group error{% endif %}">
+            <div class="input-append">
+                {{ snippet_form.lexer }}
+            </div>
+            {% for error in snippet_form.lexer.errors %}
+            <span class="help-inline">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-options-author{% if snippet_form.author.errors %} control-group error{% endif %}">
+            <span>{% trans "Author:" %}</span>
+            <div class="input-append">
+                {{ snippet_form.author }}
+            </div>
+            {% for error in snippet_form.author.errors %}
+            <span class="help-inline">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-options-expire{% if snippet_form.expires.errors %} control-group error{% endif %}">
+            {{ snippet_form.expires.errors }}
+            <div class="input-prepend">
+                <span class="add-on"><i class="icon-trash" title="{% trans "Expire in" %}"></i></span>
+                {{ snippet_form.expires }}
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+        <input tabindex="0" type="submit"class="btn btn-primary" value="{% trans "Paste it" %}">
+        <span class="shortcut">&#8984;+&#9166; or Ctrl+&#9166;</span>
+    </div>
+</form>
+
+{% if is_new %}
+    <div class="news">
+        <h2>Recent Changes</h2>
+
+        <p>{{ DPASTE_NEW_EXTRA }}</p>
+        <p>xelpaste now supports one time snippets as an option in the
+            expiration dropdown. One time snippets are deleted as soon as
+            another person views the snippet.</p>
+        <p>There is an extensive API and plugins for various text editors
+            to post snippets directly from there. See the <a href="/about/">About</a>
+            section for details.</p>
+    </div>
+{% endif %}

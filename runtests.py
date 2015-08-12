@@ -14,17 +14,17 @@ if not settings.configured:
             'django.contrib.sessions',
             'django.contrib.staticfiles',
             'mptt',
-            'dpaste',
+            'xelpaste',
         ],
-        STATIC_ROOT='/tmp/dpaste_test_static/',
+        STATIC_ROOT='/tmp/xelpaste_test_static/',
         STATIC_URL='/static/',
-        ROOT_URLCONF='dpaste.urls',
+        ROOT_URLCONF='xelpaste.urls',
     )
 
 def runtests(*test_args):
     from django.test.simple import DjangoTestSuiteRunner
     test_runner = DjangoTestSuiteRunner(verbosity=1)
-    failures = test_runner.run_tests(['dpaste', ])
+    failures = test_runner.run_tests(['xelpaste', ])
     if failures:
         sys.exit(failures)
 

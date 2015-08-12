@@ -1,0 +1,12 @@
+{% extends "xelpaste/base.html" %}
+
+{% load i18n %}
+{% load url from future %}
+
+{% block title %}{% trans "New snippet" %}{% endblock %}
+{% block headline %}{% trans "New snippet" %}{% endblock %}
+{% block xelpaste_nav_new %}active{% endblock %}
+
+{% block page %}
+    {% include "xelpaste/snippet_form.html" %}
+{% endblock %}

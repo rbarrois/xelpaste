@@ -21,15 +21,15 @@ long_description = u'\n\n'.join((
 ))
 
 setup(
-    name='dpaste',
+    name='xelpaste',
     version='2.5',
-    description='dpaste is a Django based pastebin. It\'s intended to run '
+    description='xelpaste is a Django based pastebin. It\'s intended to run '
                 'separately but its also possible to be installed into an '
                 'existing Django project like a regular app.',
     long_description=long_description,
     author='Martin Mahner',
     author_email='martin@mahner.org',
-    url='https://github.com/bartTC/dpaste/',
+    url='https://github.com/rbarrois/xelpaste/',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
@@ -41,7 +41,7 @@ setup(
     ],
     packages=find_packages(),
     package_data={
-        'dpaste': ['static/*.*', 'templates/*.*'],
+        'xelpaste': ['static/*.*', 'templates/*.*'],
         'docs': ['*'],
     },
     include_package_data=True,

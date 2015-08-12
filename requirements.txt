@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # These requirements are only required for local testing or development.
-# To use dpaste it's enough to install the package, all, and only the
+# To use xelpaste it's enough to install the package, all, and only the
 # necessary dependencies are installed automatically.
 # -----------------------------------------------------------------------------
 

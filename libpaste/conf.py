@@ -1,18 +1,23 @@
-"""Default settings for xelpaste."""
+# -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
+"""Default settings for libpaste."""
 
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 import appconf
+
 from . import enums
 
 
-class DPasteConf(appconf.AppConf):
+class LibPasteConf(appconf.AppConf):
     class Meta:
-        prefix = 'xelpaste'
+        prefix = 'libpaste'
 
-    BASE_URL = 'https://xelpaste.de'
-    DOMAIN = 'xelpaste.de'
+    BASE_URL = 'https://example.org'
+    DOMAIN = 'example.org'
 
     # Expiry
     EXPIRE_CHOICES = (

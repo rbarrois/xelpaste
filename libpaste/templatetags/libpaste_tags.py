@@ -1,5 +1,9 @@
+# -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
 from django.template import Library
-from xelpaste.highlight import pygmentize
+from libpaste.highlight import pygmentize
 
 register = Library()
 

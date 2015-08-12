@@ -1,8 +1,8 @@
-{% extends "xelpaste/base.html" %}
+{% extends "libpaste/base.html" %}
 
 {% load mptt_tags %}
 {% load i18n %}
-{% load xelpaste_tags %}
+{% load libpaste_tags %}
 {% load url from future %}
 
 {% block title %}{% trans "Snippet" %} #{{ snippet.pk }}{% endblock %}
@@ -102,7 +102,7 @@
         {{ snippet.content|linebreaksbr }}
     </div>
     {% else %}
-        {% include "xelpaste/snippet_pre.html" %}
+        {% include "libpaste/snippet_pre.html" %}
     {% endif %}
 
     <!-- ======================================================================
@@ -110,7 +110,7 @@
     ======================================================================= -->
     <div class="snippet-reply snippet-reply-hidden">
         <h3>{% trans "Reply to this snippet" %} &rarr;</h3>
-        {% include "xelpaste/snippet_form.html" with multipart=1 %}
+        {% include "libpaste/snippet_form.html" with multipart=1 %}
     </div>
 {% endblock %}
 

@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
 EXPIRE_ONETIME = 'onetime'
 EXPIRE_ONE_HOUR = 3600
 EXPIRE_ONE_WEEK = 3600 * 24 * 7
 EXPIRE_ONE_MONTH = 3600 * 24 * 30
-
 
 # Get a list of all lexer, and then remove all lexer which have '-' or '+'
 # or 'with' in the name. Those are too specific and never used. This produces a

@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ DPASTE_DOMAIN }}: {% block title %}{% trans "New snippet" %}{% endblock %}</title>
+    <title>{{ LIBPASTE_DOMAIN }}: {% block title %}{% trans "New snippet" %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static "xelpaste/bootstrap/css/bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "xelpaste/theme.css" %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,10 +16,10 @@
 <div class="container-fluid">
     <header>
         <ul class="nav nav-pills pull-right">
-            <li class="{% block xelpaste_nav_about %}{% endblock %}"><a href="{% url "xelpaste_about" %}">{% trans "About" %}</a></li>
-            <li class="{% block xelpaste_nav_history %}{% endblock %}"><a href="{% url "snippet_history" %}">{% trans "History" %}</a></li>
-            <li class="{% block xelpaste_nav_new %}{% endblock %}"><a href="{% url "snippet_new" %}">{% trans "New snippet" %} &rarr;</a></li>
-            <li class="{% block xelpaste_nav_upload %}{% endblock %}"><a href="{% url "snippet_upload" %}">{% trans "Upload snippet" %} &rarr;</a></li>
+            <li class="{% if page == 'about' %}active{% endif %}"><a href="{% url "xelpaste_about" %}">{% trans "About" %}</a></li>
+            <li class="{% if page == 'snippet_history' %}active{% endif %}"><a href="{% url "snippet_history" %}">{% trans "History" %}</a></li>
+            <li class="{% if page == 'snippet_new' %}active{% endif %}"><a href="{% url "snippet_new" %}">{% trans "New snippet" %} &rarr;</a></li>
+            <li class="{% if page == 'snippet_upload' %}active{% endif %}"><a href="{% url "snippet_upload" %}">{% trans "Upload snippet" %} &rarr;</a></li>
         </ul>
         <h3 class="headline"><a href="/">{% block headline %}{% endblock %}</a></h3>
     </header>

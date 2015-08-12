@@ -1,12 +1,11 @@
-{% extends "xelpaste/base.html" %}
+{% extends "libpaste/base.html" %}
 
 {% load i18n %}
 {% load url from future %}
-{% load xelpaste_tags %}
+{% load libpaste_tags %}
 
 {% block title %}Snippet History{% endblock %}
 {% block headline %}Snippet History{% endblock %}
-{% block xelpaste_nav_history %}active{% endblock %}
 {% block page %}
 
     <hr>
@@ -24,7 +23,7 @@
             <a href="{% url 'snippet_details_raw' snippet.secret_id %}">{% trans "Download" %}</a>
       {% endif %}
     {% else %}
-        {% include "xelpaste/snippet_pre.html" %}
+        {% include "libpaste/snippet_pre.html" %}
     {% endif %}
     {% empty %}
     <div>

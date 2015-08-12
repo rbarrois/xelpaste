@@ -1,16 +1,21 @@
+# -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
 from random import SystemRandom
 
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+
 import mptt
 
-from xelpaste.conf import settings
-from xelpaste.highlight import LEXER_DEFAULT
+from .conf import settings
+from .highlight import LEXER_DEFAULT
 
 R = SystemRandom()
 
-def generate_secret_id(length=settings.DPASTE_SLUG_LENGTH, alphabet=settings.DPASTE_SLUG_CHOICES):
+def generate_secret_id(length=settings.LIBPASTE_SLUG_LENGTH, alphabet=settings.LIBPASTE_SLUG_CHOICES):
     return ''.join([R.choice(alphabet) for i in range(length)])
 
 
@@ -35,7 +40,7 @@ class Snippet(models.Model):
     view_count = models.PositiveIntegerField(_('View count'), default=0)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
     file = models.FileField(
-        _(u"File"), upload_to=settings.DPASTE_UPLOAD_TO, max_length=255, null=True, blank=True)
+        _(u"File"), upload_to=settings.LIBPASTE_UPLOAD_TO, max_length=255, null=True, blank=True)
     content_type = models.CharField(_(u"Content type"), max_length=255, blank=True, null=True)
 
     class Meta:
@@ -48,7 +53,7 @@ class Snippet(models.Model):
     @property
     def remaining_views(self):
         if self.expire_type == self.EXPIRE_ONETIME:
-            remaining = settings.DPASTE_ONETIME_LIMIT - self.view_count
+            remaining = settings.LIBPASTE_ONETIME_LIMIT - self.view_count
             return remaining > 0 and remaining or 0
         return None
 

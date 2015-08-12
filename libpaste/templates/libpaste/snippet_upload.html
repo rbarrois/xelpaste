@@ -1,12 +1,11 @@
-{% extends "xelpaste/base.html" %}
+{% extends "libpaste/base.html" %}
 
 {% load i18n %}
 {% load url from future %}
 
 {% block title %}{% trans "Upload snippet" %}{% endblock %}
 {% block headline %}{% trans "Upload snippet" %}{% endblock %}
-{% block xelpaste_nav_upload %}active{% endblock %}
 
 {% block page %}
-    {% include "xelpaste/snippet_form.html" with multipart=1 %}
+    {% include "libpaste/snippet_form.html" with multipart=1 %}
 {% endblock %}

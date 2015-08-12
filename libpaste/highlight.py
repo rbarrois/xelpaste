@@ -1,8 +1,12 @@
+# -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
 from pygments import highlight
 from pygments.lexers import *
 from pygments.formatters import HtmlFormatter
 
-from xelpaste.conf import settings
+from .conf import settings
 
 """
 # Get a list of all lexer, and then remove all lexer which have '-' or '+'
@@ -23,15 +27,15 @@ LEXER_LIST = sorted(LEXER_LIST)
 
 # The list of lexers. Its not worth to autogenerate this. See above how to
 # retrieve this.
-LEXER_LIST = settings.DPASTE_LEXER_LIST
+LEXER_LIST = settings.LIBPASTE_LEXER_LIST
 
 LEXER_KEYS = dict(LEXER_LIST).keys()
 
 # The default lexer is python
-LEXER_DEFAULT = settings.DPASTE_LEXER_DEFAULT
+LEXER_DEFAULT = settings.LIBPASTE_LEXER_DEFAULT
 
 # Lexers which have wordwrap enabled by default
-LEXER_WORDWRAP = settings.DPASTE_LEXER_WORDWRAP
+LEXER_WORDWRAP = settings.LIBPASTE_LEXER_WORDWRAP
 
 
 class NakedHtmlFormatter(HtmlFormatter):

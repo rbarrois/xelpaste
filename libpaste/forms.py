@@ -1,12 +1,16 @@
+# -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
 import datetime
 
 from django import forms
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-from xelpaste.conf import settings
-from xelpaste.models import Snippet
-from xelpaste.highlight import LEXER_LIST, LEXER_DEFAULT, LEXER_KEYS
+from .conf import settings
+from .models import Snippet
+from .highlight import LEXER_LIST, LEXER_DEFAULT, LEXER_KEYS
 
 
 
@@ -19,8 +23,8 @@ class BaseSnippetForm(forms.ModelForm):
 
     expires = forms.ChoiceField(
         label=_(u'Expires'),
-        choices=settings.DPASTE_EXPIRE_CHOICES,
-        initial=settings.DPASTE_EXPIRE_DEFAULT,
+        choices=settings.LIBPASTE_EXPIRE_CHOICES,
+        initial=settings.LIBPASTE_EXPIRE_DEFAULT,
     )
 
     author = forms.CharField(
@@ -103,7 +107,7 @@ class BaseSnippetForm(forms.ModelForm):
 
         # Add the snippet to the user session list
         if self.request.session.get('snippet_list', False):
-            if len(self.request.session['snippet_list']) >= settings.DPASTE_MAX_SNIPPETS_PER_USER:
+            if len(self.request.session['snippet_list']) >= settings.LIBPASTE_MAX_SNIPPETS_PER_USER:
                 self.request.session['snippet_list'].pop(0)
             self.request.session['snippet_list'] += [self.instance.pk]
         else:
@@ -122,7 +126,7 @@ class SnippetForm(BaseSnippetForm):
     content = forms.CharField(
         label=_('Content'),
         widget=forms.Textarea(attrs={'placeholder': _('Awesome code goes here...')}),
-        max_length=settings.DPASTE_MAX_CONTENT_LENGTH,
+        max_length=settings.LIBPASTE_MAX_CONTENT_LENGTH,
     )
 
     class Meta(BaseSnippetForm.Meta):
@@ -140,7 +144,7 @@ class SnippetForm(BaseSnippetForm):
 
     def clean(self):
         cleaned_data = super(SnippetForm, self).clean()
-        for badword, trigger in settings.DPASTE_BADWORD_TRIGGERS.items():
+        for badword, trigger in settings.LIBPASTE_BADWORD_TRIGGERS.items():
             if self.cleaned_data['content'].count(badword) >= trigger and not self.cleaned_data['not_spam']:
                 self.likely_spam = True
                 self._errors['content'] = self.error_class([_("This snippet looks like spam.")])
@@ -150,7 +154,7 @@ class SnippetForm(BaseSnippetForm):
 class SnippetUploadForm(BaseSnippetForm):
     file = forms.FileField(
         label=_('File'),
-        max_length=settings.DPASTE_MAX_FILE_LENGTH,
+        max_length=settings.LIBPASTE_MAX_FILE_LENGTH,
     )
 
     class Meta(BaseSnippetForm.Meta):

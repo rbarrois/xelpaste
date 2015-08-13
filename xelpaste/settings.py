@@ -66,7 +66,7 @@ ALLOWED_HOSTS = config.getlist('site.allowed_hosts')
 LIBPASTE_SITENAME = config.get('site.name')
 LIBPASTE_BASE_URL = config.get('site.base_url', _default_url)
 
-if not LIBPASTE_BASE_URL.endswith('/'):
+if APPMODE != 'dist' and not LIBPASTE_BASE_URL.endswith('/'):
     raise ImproperlyConfigured("site.base_url must end with a /, got %r" % LIBPASTE_BASE_URL)
 
 

@@ -2,19 +2,22 @@
 
 from __future__ import unicode_literals
 
-import optparse
+import argparse
 
 from django.utils import timezone
-from django.core.management.base import LabelCommand
+from django.core.management.base import BaseCommand
 
 from ...models import Snippet
 
-class Command(LabelCommand):
-    option_list = LabelCommand.option_list + (
-        optparse.make_option('--dry-run', '-d', action='store_true', dest='dry_run',
-            help='Don\'t do anything.'),
-    )
+class Command(BaseCommand):
     help = "Purges snippets that are expired"
+
+    def add_arguments(self, parser):
+        parser.add_argument('--dry-run', '-n',
+            action='store_true',
+            dest='dry_run',
+            help="Don't do anything",
+        )
 
     def handle(self, *args, **options):
         deleteable_snippets = Snippet.objects.filter(

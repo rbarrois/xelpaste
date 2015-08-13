@@ -90,9 +90,15 @@ MIDDLEWARE_CLASSES = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.core.context_processors.request',
+    'django.template.context_processors.request',
     'libpaste.context_processors.libpaste_settings',
 )
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+    },
+]
 
 ROOT_URLCONF = 'xelpaste.urls'
 

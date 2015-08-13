@@ -245,12 +245,18 @@ FORMAT_MAPPING = {
     'json': _format_json,
 }
 
+
+def _get_value(request, field, default = ''):
+    val = request.POST.get(field) or request.GET.get(field) or default
+    return val.strip()
+
+
 @csrf_exempt
 def snippet_api(request):
     content = request.POST.get('content', '').strip()
-    lexer = request.REQUEST.get('lexer', LEXER_DEFAULT).strip()
-    format = request.REQUEST.get('format', 'default').strip()
-    author = request.REQUEST.get('author', '').strip()
+    lexer = _get_value(request, 'lexer', LEXER_DEFAULT)
+    format = _get_value(request, 'format', 'default')
+    author = _get_value(request, 'author')
 
     if not content:
         return HttpResponseBadRequest('No content given')

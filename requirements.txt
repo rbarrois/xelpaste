@@ -5,12 +5,11 @@
 # -----------------------------------------------------------------------------
 
 # Project dependencies
-django==1.6.1
-django-mptt==0.6.0
-pygments==1.6
-requests==2.0.0
-django-appconf==0.6
-django-sendfile>=0.3.0
+django>=1.8.0,<1.9
+django-mptt
+pygments
+django-appconf
+django-sendfile
 getconf
 
 # Testing

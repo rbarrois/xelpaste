@@ -43,10 +43,9 @@ setup(
 
     # Dependencies
     install_requires=[
-        'django>=1.7',
+        'django>=1.8,<1.9',
         'django-mptt>=0.6.0',
         'pygments>=1.6',
-        'requests>=2.0.0',
     ],
     tests_require=[
     ],

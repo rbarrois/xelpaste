@@ -50,6 +50,7 @@ class BaseSnippetForm(forms.ModelForm):
 
     class Meta:
         model = Snippet
+        exclude = []
 
     def __init__(self, request, *args, **kwargs):
         super(BaseSnippetForm, self).__init__(*args, **kwargs)

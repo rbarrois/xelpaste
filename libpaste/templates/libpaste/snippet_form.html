@@ -1,5 +1,4 @@
 {% load i18n %}
-{% load url from future %}
 
 <form method="post" action="" class="form-inline" {% if multipart %}enctype="multipart/form-data"{% endif %}>
     {% csrf_token %}

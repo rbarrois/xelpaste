@@ -12,7 +12,8 @@ doc/_build/
 .coverage
 *.egg-info
 node_modules/
-xelpaste/static/xelpaste/
+xelpaste/assets/
+xelpaste/static/
 build/
 dist/
 htmlcov/

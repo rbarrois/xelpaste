@@ -144,8 +144,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # ======================================
 
-STATIC_URL = config.get('site.static_url', '/static/')
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = config.get('site.assets_url', '/assets/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 
 
 # Uploads

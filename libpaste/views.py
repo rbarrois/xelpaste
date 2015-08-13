@@ -228,7 +228,7 @@ def snippet_gist(request, snippet_id): # pragma: no cover
         'description': 'the description for this gist',
         'public': False,
         'files': {
-            '%s_snippet.py' % settings.LIBPASTE_DOMAIN: {
+            '%s_snippet.py' % settings.LIBPASTE_SITENAME: {
                 'content': snippet.content,
             }
         }

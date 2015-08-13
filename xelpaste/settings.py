@@ -6,6 +6,8 @@ import getconf
 import os
 import re
 
+from django.core.exceptions import ImproperlyConfigured
+
 
 # Paths
 # =====
@@ -35,7 +37,7 @@ if APPMODE in ('dev', 'dist'):
 else:
     _default_secret_key = ''
 
-SECRET_KEY = config.get('django.secret_key', _default_secret_key)
+SECRET_KEY = config.get('app.secret_key', _default_secret_key)
 
 
 # Debug
@@ -56,13 +58,16 @@ if config.get('site.admin_mail'):
 # ====
 
 if APPMODE == 'dev':
-    _default_domain = 'example.org'
+    _default_url = 'http://example.org/'
 else:
-    _default_domain = ''
+    _default_url = ''
 
 ALLOWED_HOSTS = config.getlist('site.allowed_hosts')
-LIBPASTE_DOMAIN = config.get('site.domain', _default_domain)
-LIBPASTE_BASE_URL = config.get('site.base_url', 'http://%s/' % LIBPASTE_DOMAIN)
+LIBPASTE_SITENAME = config.get('site.name')
+LIBPASTE_BASE_URL = config.get('site.base_url', _default_url)
+
+if not LIBPASTE_BASE_URL.endswith('/'):
+    raise ImproperlyConfigured("site.base_url must end with a /, got %r" % LIBPASTE_BASE_URL)
 
 
 # Loadable components

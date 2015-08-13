@@ -17,7 +17,7 @@ class LibPasteConf(appconf.AppConf):
         prefix = 'libpaste'
 
     BASE_URL = 'https://example.org'
-    DOMAIN = 'example.org'
+    SITENAME = 'example.org'
 
     # Expiry
     EXPIRE_CHOICES = (

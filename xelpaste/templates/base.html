@@ -6,8 +6,7 @@
 <html>
 <head>
     <title>{{ LIBPASTE_DOMAIN }}: {% block title %}{% trans "New snippet" %}{% endblock %}</title>
-    <link rel="stylesheet" href="{% static "xelpaste/bootstrap/css/bootstrap.min.css" %}">
-    <link rel="stylesheet" href="{% static "xelpaste/theme.css" %}">
+    <link rel="stylesheet" href="{% static "xelpaste/app.css" %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	{% block extrahead %}{% endblock %}
 </head>
@@ -29,7 +28,8 @@
 </div>
 
 {% block script_footer %}
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+<script src="{% static "xelpaste/vendor.js" %}"></script>
+<script src="{% static "xelpaste/app.js" %}"></script>
 <script>
 jQuery(function($) {
     $('.autofocus textarea:first').focus();

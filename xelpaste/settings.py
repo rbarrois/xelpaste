@@ -16,10 +16,10 @@ CHECKOUT_DIR = os.path.dirname(BASE_DIR)
 # Global configuration
 # ====================
 
-config = getconf.ConfigGetter('xelpaste',
+config = getconf.ConfigGetter('xelpaste', [
     '/etc/xelpaste/*.ini',
     os.path.join(CHECKOUT_DIR, 'local_settings.ini'),
-)
+    ])
 
 
 ENVIRONMENT = config.get('app.mode', 'prod')
@@ -69,6 +69,7 @@ INSTALLED_APPS = (
 
     'mptt',
     'libpaste',
+    'xelpaste',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -85,7 +86,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 ROOT_URLCONF = 'xelpaste.urls'
 
-if ENVIRONMENT == 'dev':
+if ENVIRONMENT == 'blah':
     # Avoid the need for collectstatic before running tests
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 else:
@@ -154,7 +155,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = config.get('uploads.dir', os.path.join(CHECKOUT_DIR, 'media'))
 LIBPASTE_UPLOAD_TO = 'snippets'
 SENDFILE_BACKEND = 'sendfile.backends.%s' % config.get('uploads.serve', 'simple')
-SENDFILE_ROOT = os.path.join(MEDIA_ROOT, XELPASTE_UPLOAD_TO)
+SENDFILE_ROOT = os.path.join(MEDIA_ROOT, LIBPASTE_UPLOAD_TO)
 SENDFILE_URL = config.get('uploads.internal_url', '/uploads/')
 
 

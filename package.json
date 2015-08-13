@@ -1,0 +1,22 @@
+{
+  "name": "xelpaste-ui",
+  "version": "0.0.1",
+  "description": "UI components for xelpaste",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Raphaël Barrois",
+  "license": "MIT",
+  "devDependencies": {
+    "browserify": "~10.2.0",
+    "clean-css": "~3.2.10",
+    "exorcist": "~0.4.0",
+    "rework-npm-cli": "~0.1.1",
+    "uglify-js": "~2.4.21"
+  },
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "jquery": "~2.1.4",
+    "typeahead": "~0.2.0"
+  }
+}

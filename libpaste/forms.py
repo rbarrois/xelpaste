@@ -19,18 +19,20 @@ class BaseSnippetForm(forms.ModelForm):
         label=_(u'Lexer'),
         initial=LEXER_DEFAULT,
         choices=LEXER_LIST,
+        widget=forms.Select(attrs={'class': 'form-control'}),
     )
 
     expires = forms.ChoiceField(
         label=_(u'Expires'),
         choices=settings.LIBPASTE_EXPIRE_CHOICES,
         initial=settings.LIBPASTE_EXPIRE_DEFAULT,
+        widget=forms.Select(attrs={'class': 'form-control'}),
     )
 
     author = forms.CharField(
         label=_(u"Author"),
-        widget=forms.TextInput(),
         max_length=255,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
     )
 
     not_spam = forms.BooleanField(
@@ -43,7 +45,7 @@ class BaseSnippetForm(forms.ModelForm):
     title = forms.CharField(
         label=_(u'Title'),
         required=False,
-        widget=forms.TextInput(attrs={'autocomplete': 'off'}),
+        widget=forms.TextInput(attrs={'autocomplete': 'off', 'class': 'form-control'}),
     )
 
     class Meta:
@@ -125,7 +127,7 @@ class BaseSnippetForm(forms.ModelForm):
 class SnippetForm(BaseSnippetForm):
     content = forms.CharField(
         label=_('Content'),
-        widget=forms.Textarea(attrs={'placeholder': _('Awesome code goes here...')}),
+        widget=forms.Textarea(attrs={'placeholder': _('Awesome code goes here...'), 'class': 'form-control'}),
         max_length=settings.LIBPASTE_MAX_CONTENT_LENGTH,
     )
 
@@ -145,7 +147,7 @@ class SnippetForm(BaseSnippetForm):
     def clean(self):
         cleaned_data = super(SnippetForm, self).clean()
         for badword, trigger in settings.LIBPASTE_BADWORD_TRIGGERS.items():
-            if self.cleaned_data['content'].count(badword) >= trigger and not self.cleaned_data['not_spam']:
+            if self.cleaned_data.get('content', '').count(badword) >= trigger and not self.cleaned_data['not_spam']:
                 self.likely_spam = True
                 self._errors['content'] = self.error_class([_("This snippet looks like spam.")])
         return cleaned_data
@@ -160,9 +162,12 @@ class SnippetUploadForm(BaseSnippetForm):
     class Meta(BaseSnippetForm.Meta):
         fields = (
             'file',
-            'lexer',
             'author',
         )
+
+    def __init__(self, *args, **kwargs):
+        super(SnippetUploadForm, self).__init__(*args, **kwargs)
+        self.fields['lexer'].required = False
 
     def clean_file(self):
         fd = self.cleaned_data.get('file')

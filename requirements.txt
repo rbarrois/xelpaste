@@ -14,15 +14,7 @@ django-sendfile>=0.3.0
 getconf
 
 # Testing
-python-coveralls==2.4.0
-coverage==3.7
-tox==1.6.1
-docutils==0.11
-sphinx==1.2
+coverage
+sphinx
 sphinx_rtd_theme
-
-# Deployment specific
-django-redis==3.3
-gunicorn==18.0
-south==0.8.2
-newrelic
+check-manifest

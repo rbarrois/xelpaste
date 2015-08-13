@@ -81,16 +81,18 @@ h1, h2, h3, h4 {
     border-radius: 0;
 }
 
+.form-content {
+    width: 100%;
+}
+
 .form-options-title {
     visibility: hidden;
 }
 
 .form-options-lexer {
-    float: left;
 }
 
 .form-options-author {
-    float: left;
     margin-left: 10px;
 }
 
@@ -228,7 +230,7 @@ div.tree div.submit input{
 }
 
 .code ol li {
-    color: #aaa;
+    color: #eee;
     font-size: 12px;
     line-height: 21px;
     cursor: pointer;

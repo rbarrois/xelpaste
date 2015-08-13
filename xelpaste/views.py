@@ -12,7 +12,7 @@ from libpaste import models
 # Static pages
 # -----------------------------------------------------------------------------
 
-def about(request, template_name='xelpaste/about.html'):
+def about(request, template_name='about.html'):
     """
     A rather static page, we need a view just to display a couple of
     statistics.
@@ -30,8 +30,8 @@ def about(request, template_name='xelpaste/about.html'):
 # handle them here.
 # -----------------------------------------------------------------------------
 
-def page_not_found(request, template_name='xelpaste/404.html'):
+def page_not_found(request, template_name='404.html'):
     return django_defaults.page_not_found(request, template_name) # pragma: no cover
 
-def server_error(request, template_name='xelpaste/500.html'):
+def server_error(request, template_name='500.html'):
     return django_defaults.server_error(request, template_name) # pragma: no cover

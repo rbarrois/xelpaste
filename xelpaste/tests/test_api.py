@@ -4,12 +4,12 @@ from django.core.urlresolvers import reverse
 from django.test.client import Client
 from django.test import TestCase
 
-from ..models import Snippet
+from libpaste.models import Snippet
 
 class SnippetAPITestCase(TestCase):
 
     def setUp(self):
-        self.api_url = reverse('xelpaste_api_create_snippet')
+        self.api_url = reverse('api_create_snippet')
         self.client = Client()
 
 

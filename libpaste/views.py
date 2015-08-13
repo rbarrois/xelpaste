@@ -31,7 +31,7 @@ from .highlight import LEXER_DEFAULT, LEXER_KEYS
 # Snippet Handling
 # -----------------------------------------------------------------------------
 
-def snippet_new(request, template_name='xelpaste/snippet_new.html'):
+def snippet_new(request, template_name='libpaste/snippet_new.html'):
     """
     Create a new snippet.
     """
@@ -52,7 +52,7 @@ def snippet_new(request, template_name='xelpaste/snippet_new.html'):
     })
 
 
-def snippet_upload(request, template_name='xelpaste/snippet_upload.html'):
+def snippet_upload(request, template_name='libpaste/snippet_upload.html'):
     """
     Upload an existing snippet.
     """
@@ -74,7 +74,7 @@ def snippet_upload(request, template_name='xelpaste/snippet_upload.html'):
     })
 
 
-def snippet_details(request, snippet_id, template_name='xelpaste/snippet_details.html', is_raw=False):
+def snippet_details(request, snippet_id, template_name='libpaste/snippet_details.html', is_raw=False):
     """
     Details list view of a snippet. Handles the actual view, reply and
     tree/diff view.
@@ -127,7 +127,7 @@ def snippet_details(request, snippet_id, template_name='xelpaste/snippet_details
         'lexers': LEXER_LIST,
         'lines': range(snippet.get_linecount()),
         'tree': tree,
-        'wordwrap': snippet.lexer in LEXER_WORDWRAP and 'True' or 'False',
+        'wordwrap': 'wordwrap' in request.GET,
         'page': 'snippet_details',
     })
 
@@ -154,7 +154,7 @@ def snippet_delete(request, snippet_id=None):
     return HttpResponseRedirect(reverse('snippet_new'))
 
 
-def snippet_history(request, template_name='xelpaste/snippet_list.html'):
+def snippet_history(request, template_name='libpaste/snippet_list.html'):
     """
     Display the last `n` snippets created by this user (and saved in his
     session).
@@ -177,7 +177,7 @@ def snippet_history(request, template_name='xelpaste/snippet_list.html'):
     })
 
 
-def snippet_diff(request, template_name='xelpaste/snippet_diff.html'):
+def snippet_diff(request, template_name='libpaste/snippet_diff.html'):
     """
     Display a diff between two given snippet secret ids.
     """

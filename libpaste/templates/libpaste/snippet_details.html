@@ -94,12 +94,12 @@
       {% if snippet.is_image %}
           <img src="{% url 'snippet_details_raw' snippet.secret_id %}">
       {% else %}
-          <a href="{% url 'snippet_details_raw' snippet.secret_id %}">{% trans "Download" %}</a>
+      <a href="{% url 'snippet_details_raw' snippet.secret_id %}"><span class="glyphicon glyphicon-download"></span> {% trans "Download" %}</a>
       {% endif %}
       </div>
     {% elif snippet.lexer == 'text' %}
     <div class="snippet-rendered">
-        {{ snippet.content|linebreaksbr }}
+        <pre>{{ snippet.content|linebreaksbr }}</pre>
     </div>
     {% else %}
         {% include "libpaste/snippet_pre.html" %}
@@ -108,8 +108,11 @@
     <!-- ======================================================================
     Snippet Reply
     ======================================================================= -->
-    <div class="snippet-reply snippet-reply-hidden">
+    <div class="snippet-reply {% if not snippet_form.errors %}snippet-reply-hidden{% endif %}">
         <h3>{% trans "Reply to this snippet" %} &rarr;</h3>
+        {% if snippet_form.errors %}
+        <div class="alert alert-danger" role="alert">{% trans "Please fix your reply below." %}</div>
+        {% endif %}
         {% include "libpaste/snippet_form.html" with multipart=1 %}
     </div>
 {% endblock %}

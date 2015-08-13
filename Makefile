@@ -30,22 +30,33 @@ FONTS_SRC_FILES = $(shell find $(BOOSTRAP_SRC)/fonts -type f)
 FONTS_FILES = $(FONTS_SRC_FILES:$(BOOSTRAP_SRC)/%=%)
 FONTS_DST_FILES = $(addprefix $(DIST_DIR)/, $(FONTS_FILES))
 
-default: build
 
-install-deps:
-	npm install
+default: build
 
 clean:
 	rm -rf $(BUILD_DIR)/* $(DIST_DIR)/* $(PUB_DIR)/*
 
-.PHONY: default install-deps clean
+.PHONY: default clean
 
 
 # QUALITY
 # =======
 
-lint:
+test: build
+	$(MANAGE_PY) test libpaste xelpaste
+	check-manifest
 
+.PHONY: test
+
+
+# DEPENDENCIES
+# ============
+
+install-deps:
+	pip install -r requirements.txt
+	npm install
+
+.PHONY: install-deps
 
 # BUILDING
 # ========

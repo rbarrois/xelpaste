@@ -1,9 +1,14 @@
-include README.rst
-include LICENSE
-include CHANGELOG
-include runtests.py
-include tox.ini
-recursive-include xelpaste/templates *
-recursive-include xelpaste/static *
-recursive-include docs *
-recursive-exclude docs/_build *
+include README.rst LICENSE CHANGELOG
+include crontab requirements.txt
+
+graft xelpaste
+graft libpaste
+global-exclude *.py[cod] __pycache__
+global-exclude .*.swp *.*~
+
+prune dev
+prune docs
+prune frontend
+prune node_modules
+exclude .coveragerc 
+exclude example_settings.ini Makefile manage.py package.json runtests.py

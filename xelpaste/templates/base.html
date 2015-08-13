@@ -6,9 +6,10 @@
 <html>
 <head>
     <title>{{ LIBPASTE_DOMAIN }}: {% block title %}{% trans "New snippet" %}{% endblock %}</title>
-    <link rel="stylesheet" href="{% static "xelpaste/app.css" %}">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	{% block extrahead %}{% endblock %}
+    <link rel="stylesheet" href="{% static "xelpaste/css/app.css" %}">
 </head>
 <body>
 
@@ -28,17 +29,17 @@
 </div>
 
 {% block script_footer %}
-<script src="{% static "xelpaste/vendor.js" %}"></script>
-<script src="{% static "xelpaste/app.js" %}"></script>
+<script src="{% static "xelpaste/js/vendor.js" %}"></script>
+<script src="{% static "xelpaste/js/app.js" %}"></script>
 <script>
 jQuery(function($) {
     $('.autofocus textarea:first').focus();
     $('.superenter textarea').on('keydown', function(e){
         var metaKey;
-        if (navigator.appVersion.indexOf("Win")!=-1) {
-            metaKey = e.ctrlKey;
-        } else {
+        if (navigator.platform.indexOf("Mac") != -1) {
             metaKey = event.metaKey;
+        } else {
+            metaKey = e.ctrlKey;
         }
         if (e.keyCode == 13 && metaKey) {
             $(this).closest('form').submit();

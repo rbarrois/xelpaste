@@ -8,9 +8,8 @@ from django.test.client import Client
 from django.test import TestCase
 from django.test.utils import override_settings
 
-from xelpaste.conf import settings
-
-from ..models import Snippet
+from libpaste.conf import settings
+from libpaste.models import Snippet
 
 
 class SnippetTestCase(TestCase):
@@ -22,8 +21,8 @@ class SnippetTestCase(TestCase):
     def valid_form_data(self):
         return {
             'content': u"Hello Wörld.\n\tGood Bye",
-            'lexer': settings.DPASTE_LEXER_DEFAULT,
-            'expires': settings.DPASTE_EXPIRE_DEFAULT,
+            'lexer': settings.LIBPASTE_LEXER_DEFAULT,
+            'expires': settings.LIBPASTE_EXPIRE_DEFAULT,
         }
 
 
@@ -280,11 +279,11 @@ class SnippetTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Snippet.objects.count(), 0)
 
-    @override_settings(DPASTE_MAX_SNIPPETS_PER_USER=2)
+    @override_settings(LIBPASTE_MAX_SNIPPETS_PER_USER=2)
     def test_snippet_that_exceed_history_limit_get_trashed(self):
         """
         The maximum number of snippets a user can save in the session are
-        defined by `DPASTE_MAX_SNIPPETS_PER_USER`. Exceed that number will
+        defined by `LIBPASTE_MAX_SNIPPETS_PER_USER`. Exceed that number will
         remove the oldest snippet from the list.
         """
         # Create three snippets but since the setting is 2 only the latest two
@@ -354,7 +353,7 @@ class SnippetTestCase(TestCase):
     def test_highlighting(self):
         # You can pass any lexer to the pygmentize function and it will
         # never fail loudly.
-        from xelpaste.highlight import pygmentize
+        from libpaste.highlight import pygmentize
         pygmentize('code', lexer_name='python')
         pygmentize('code', lexer_name='doesnotexist')
 
@@ -365,7 +364,7 @@ class SnippetTestCase(TestCase):
     #     """
     #     Generate 1000 random slugs, make sure we have no duplicates.
     #     """
-    #     from xelpaste.models import generate_secret_id
+    #     from libpaste.models import generate_secret_id
     #     result_list = []
     #     for i in range(0, 1000):
     #         result_list.append(generate_secret_id())

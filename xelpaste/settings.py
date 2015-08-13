@@ -81,7 +81,7 @@ MIDDLEWARE_CLASSES = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
-    'libpaste.context_processors.xelpaste_settings',
+    'libpaste.context_processors.libpaste_settings',
 )
 
 ROOT_URLCONF = 'xelpaste.urls'
@@ -109,7 +109,7 @@ if _engine not in _ENGINE_MAP:
     )
 if _engine == 'sqlite':
     if ENVIRONMENT == 'dev':
-        _default_db_name = os.path.join(CHECKOUT_DIR, 'db.sqlite')
+        _default_db_name = os.path.join(CHECKOUT_DIR, 'dev', 'db.sqlite')
     else:
         _default_db_name = '/var/lib/xelpaste/db.sqlite'
 else:

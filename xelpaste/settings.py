@@ -22,15 +22,15 @@ config = getconf.ConfigGetter('xelpaste', [
     ])
 
 
-ENVIRONMENT = config.get('app.mode', 'prod')
-assert ENVIRONMENT in ('dev', 'prod'), "Invalid environment %s" % ENVIRONMENT
+APPMODE = config.get('app.mode', 'prod')
+assert APPMODE in ('dev', 'dist', 'prod'), "Invalid application mode %s" % APPMODE
 
 
 # Generic Django settings
 # =======================
 
 # SECURITY WARNING: keep the secret key used in production secret!
-if ENVIRONMENT == 'dev':
+if APPMODE in ('dev', 'dist'):
     _default_secret_key = 'Dev only!!'
 else:
     _default_secret_key = ''
@@ -42,7 +42,7 @@ SECRET_KEY = config.get('django.secret_key', _default_secret_key)
 # =====
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config.getbool('app.debug', ENVIRONMENT == 'dev')
+DEBUG = config.getbool('app.debug', APPMODE == 'dev')
 TEMPLATE_DEBUG = DEBUG
 
 if config.get('site.admin_mail'):
@@ -55,9 +55,14 @@ if config.get('site.admin_mail'):
 # URLs
 # ====
 
+if APPMODE == 'dev':
+    _default_domain = 'example.org'
+else:
+    _default_domain = ''
+
 ALLOWED_HOSTS = config.getlist('site.allowed_hosts')
-LIBPASTE_DOMAIN = config.get('site.domain')
-LIBPASTE_BASE_URL = config.get('site.base_url', 'https://%s/' % LIBPASTE_DOMAIN)
+LIBPASTE_DOMAIN = config.get('site.domain', _default_domain)
+LIBPASTE_BASE_URL = config.get('site.base_url', 'http://%s/' % LIBPASTE_DOMAIN)
 
 
 # Loadable components
@@ -86,7 +91,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 ROOT_URLCONF = 'xelpaste.urls'
 
-if ENVIRONMENT == 'blah':
+if APPMODE == 'dev':
     # Avoid the need for collectstatic before running tests
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 else:
@@ -108,7 +113,7 @@ if _engine not in _ENGINE_MAP:
         % (_engine, ', '.join(sorted(_ENGINE_MAP.keys())))
     )
 if _engine == 'sqlite':
-    if ENVIRONMENT == 'dev':
+    if APPMODE == 'dev':
         _default_db_name = os.path.join(CHECKOUT_DIR, 'dev', 'db.sqlite')
     else:
         _default_db_name = '/var/lib/xelpaste/db.sqlite'
@@ -151,8 +156,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 # Uploads
 # =======
 
+if APPMODE == 'dev':
+    _default_media = os.path.join(CHECKOUT_DIR, 'dev', 'media')
+else:
+    _default_media = ''
 
-MEDIA_ROOT = config.get('uploads.dir', os.path.join(CHECKOUT_DIR, 'media'))
+MEDIA_ROOT = config.get('uploads.dir', _default_media)
 LIBPASTE_UPLOAD_TO = 'snippets'
 SENDFILE_BACKEND = 'sendfile.backends.%s' % config.get('uploads.serve', 'simple')
 SENDFILE_ROOT = os.path.join(MEDIA_ROOT, LIBPASTE_UPLOAD_TO)

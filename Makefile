@@ -62,7 +62,7 @@ install-deps:
 # ========
 
 build: build-vendorjs build-appjs build-appcss build-fonts
-	$(MANAGE_PY) collectstatic --noinput --verbosity 2
+	XELPASTE_APP_MODE=dist $(MANAGE_PY) collectstatic --noinput --verbosity 2
 
 build-vendorjs: $(DIST_DIR)/js/vendor.js
 

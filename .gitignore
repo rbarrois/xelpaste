@@ -4,8 +4,7 @@
 *.pyo
 
 # Dev-related files
-db.sqlite3
-media/
+dev/
 
 # Build-related files
 doc/_build/

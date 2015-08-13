@@ -23,6 +23,7 @@ class SnippetTestCase(TestCase):
             'content': u"Hello Wörld.\n\tGood Bye",
             'lexer': settings.LIBPASTE_LEXER_DEFAULT,
             'expires': settings.LIBPASTE_EXPIRE_DEFAULT,
+            'author': "Someone",
         }
 
 

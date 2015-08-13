@@ -253,16 +253,16 @@ def snippet_gist(request, snippet_id): # pragma: no cover
 
 def _format_default(s):
     """The default response is the snippet URL wrapped in quotes."""
-    return u'"%s%s"' % (settings.LIBPASTE_BASE_URL, s.get_absolute_url())
+    return u'"%s%s"' % (settings.LIBPASTE_BASE_URL.rstrip('/'), s.get_absolute_url())
 
 def _format_url(s):
     """The `url` format returns the snippet URL, no quotes, but a linebreak after."""
-    return u'%s%s\n' % (settings.LIBPASTE_BASE_URL, s.get_absolute_url())
+    return u'%s%s\n' % (settings.LIBPASTE_BASE_URL.rstrip('/'), s.get_absolute_url())
 
 def _format_json(s):
     """The `json` format export."""
     return json.dumps({
-        'url': u'%s%s' % (settings.LIBPASTE_BASE_URL, s.get_absolute_url()),
+        'url': u'%s%s' % (settings.LIBPASTE_BASE_URL.rstrip('/'), s.get_absolute_url()),
         'content': s.content,
         'lexer': s.lexer,
     })
@@ -279,22 +279,24 @@ def snippet_api(request):
     content = request.POST.get('content', '').strip()
     lexer = request.REQUEST.get('lexer', LEXER_DEFAULT).strip()
     format = request.REQUEST.get('format', 'default').strip()
+    author = request.REQUEST.get('author', '').strip()
 
     if not content:
         return HttpResponseBadRequest('No content given')
 
-    if not lexer in LEXER_KEYS:
+    if lexer not in LEXER_KEYS:
         return HttpResponseBadRequest('Invalid lexer given. Valid lexers are: %s' %
             ', '.join(LEXER_KEYS))
 
     s = Snippet.objects.create(
         content=content,
         lexer=lexer,
-        expires=timezone.now() + datetime.timedelta(seconds=60*60*24*30)
+        expires=timezone.now() + datetime.timedelta(seconds=60*60*24*30),
+        author=author,
     )
     s.save()
 
-    if not format in FORMAT_MAPPING:
+    if format not in FORMAT_MAPPING:
         response = _format_default(s)
     else:
         response = FORMAT_MAPPING[format](s)

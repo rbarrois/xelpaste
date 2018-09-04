@@ -1,8 +1,8 @@
 Changelog
 =========
 
-master (XXXX-XX-XX)
--------------------
+3.1.1 (2018-09-05)
+------------------
 
 * Include dev files for 'sdist' version.
 * Switch to zest.releaser for releases.

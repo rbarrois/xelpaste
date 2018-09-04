@@ -11,6 +11,9 @@
     "browserify": "~10.2.0",
     "clean-css": "~3.2.10",
     "exorcist": "~0.4.0",
+    "minimize": "^1.4.1",
+    "node-sass": "^4.9.3",
+    "reactify": "^1.1.1",
     "rework-npm-cli": "~0.1.1",
     "uglify-js": "~2.4.21"
   },

@@ -15,7 +15,7 @@ from django.http import (Http404, HttpResponseRedirect, HttpResponseBadRequest,
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.views.defaults import (page_not_found as django_page_not_found,
     server_error as django_server_error)
 from django.views.decorators.csrf import csrf_exempt

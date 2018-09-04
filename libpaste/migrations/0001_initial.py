@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 ('rght', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('tree_id', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('level', models.PositiveIntegerField(editable=False, db_index=True)),
-                ('parent', models.ForeignKey(to='libpaste.Snippet', related_name='children', null=True, blank=True)),
+                ('parent', models.ForeignKey(to='libpaste.Snippet', related_name='children', null=True, blank=True, on_delete=models.CASCADE)),
             ],
             options={
                 'db_table': 'xelpaste_snippet',

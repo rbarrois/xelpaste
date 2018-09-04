@@ -52,11 +52,11 @@ test: build
 # DEPENDENCIES
 # ============
 
-install-deps:
-	pip install -r requirements.txt
+update:
+	pip install --upgrade -r requirements.txt
 	npm install
 
-.PHONY: install-deps
+.PHONY: update
 
 # BUILDING
 # ========

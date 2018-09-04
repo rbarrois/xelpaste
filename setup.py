@@ -4,8 +4,11 @@
 import codecs
 import os
 import re
+import subprocess
+import sys
 
 from setuptools import setup, find_packages
+from setuptools.command import build_py
 
 root_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -22,13 +25,28 @@ def get_version(package_name):
     return ''
 
 
+class BuildWithMakefile(build_py.build_py):
+    """Custom 'build' command that runs 'make build' first."""
+    def run(self):
+        subprocess.check_call(['make', 'update-js'])
+        subprocess.check_call(['make', 'build'])
+        if sys.version_info[0] < 3:
+            # Under Python 2.x, build_py is an old-style class.
+            return build_py.build_py.run(self)
+        return super().run()
+
+
 PACKAGE = 'xelpaste'
+
+
 setup(
     # Contents
     name=PACKAGE,
-    packages=find_packages(),
+    packages=find_packages(exclude=['dev', 'tests*']),
     include_package_data=True,
     scripts=['bin/xelpastectl'],
+    cmdclass={'build_py': BuildWithMakefile},
+    zip_safe=False,
 
     # Metadata
     version=get_version(PACKAGE),
@@ -37,6 +55,7 @@ setup(
     author='Martin Mahner',
     maintainer="Raphaël Barrois",
     maintainer_email='raphael.barrois+%s@polytechnique.org' % PACKAGE,
+    author_email='raphael.barrois+%s@polytechnique.org' % PACKAGE,
     url='https://github.com/rbarrois/%s/' % PACKAGE,
     keywords=['xelpaste', 'dpaste', 'pastebin'],
     license='MIT',

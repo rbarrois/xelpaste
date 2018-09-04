@@ -35,6 +35,7 @@ default: build
 
 clean:
 	rm -rf $(BUILD_DIR)/* $(DIST_DIR)/* $(PUB_DIR)/*
+	find $(PACKAGE_DIR) -type f -name '*.pyc' -delete
 
 .PHONY: default clean
 
@@ -52,11 +53,16 @@ test: build
 # DEPENDENCIES
 # ============
 
-update:
+update: update-js
 	pip install --upgrade -r requirements.txt
+update-js:
 	npm install
 
-.PHONY: update
+release:
+	fullrelease
+
+
+.PHONY: update update-js release
 
 # BUILDING
 # ========
@@ -90,24 +96,27 @@ $(DIST_DIR)/css/%.css: $(BUILD_DIR)/%.css $(DEPFILES)
 	    --output $@
 
 $(BUILD_DIR)/app.js: $(APP_DIR)/main.js $(APP_JS_FILES) $(DEPFILES)
+	@mkdir -p $$(dirname $@)
 	$(BROWSERIFY) --entry $< --debug --transform reactify \
 	    $(addprefix --external=,$(JS_LIBS)) \
 	    | $(EXORCIST) $(EXORCIST_OPTIONS) $@.map \
 	    > $@
 
 $(BUILD_DIR)/vendor.js: $(DEPFILES)
+	@mkdir -p $$(dirname $@)
 	$(BROWSERIFY) --debug \
 	    $(addprefix --require=,$(JS_LIBS)) \
 	    | $(EXORCIST) $(EXORCIST_OPTIONS) $@.map \
 	    > $@
 
 $(BUILD_DIR)/app.css: $(APP_CSS_FILES) $(DEPFILES)
+	@mkdir -p $$(dirname $@)
 	$(REWORK) $< --sourcemap \
 	    | $(EXORCIST) $(EXORCIST_OPTIONS) $@.map \
 	    | grep -v 'bootstrap.css.map' \
 	    > $@
 
-.PHONY: build build-appjs build-vendorjs
+.PHONY: build build-appjs build-vendorjs build-fonts build-appcss
 
 
 # MISC

@@ -63,16 +63,21 @@ Site (``[site]``)
 Hosting and URLs.
 
 Options:
+
 ``name``
     ``str``, the name of your site (``xelpaste``, ``mypaster``, ...).
+
 ``base_url``
     ``str``, where your site is hosted.
     A trailing slash is **required**.
+
 ``assets_url``
     ``str``, the URL where assets (CSS, JS, ...) are served.
     May be a relative URL.
+
 ``admin_mail``
     ``str``, the email where the admin should be notified.
+
 ``allowed_hosts``
     ``str list``, comma-separated list of valid ``Host:`` HTTP headers.
     See Django docs for details.

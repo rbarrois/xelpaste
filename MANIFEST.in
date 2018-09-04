@@ -7,8 +7,8 @@ global-exclude *.py[cod] __pycache__
 global-exclude .*.swp *.*~
 
 prune dev
-prune docs
-prune frontend
+graft docs
+graft frontend
 prune node_modules
-exclude .coveragerc 
-exclude example_settings.ini Makefile manage.py package.json runtests.py
+include .coveragerc 
+include example_settings.ini Makefile manage.py package.json runtests.py

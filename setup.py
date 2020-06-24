@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import codecs
+import glob
 import os
 import re
 import subprocess
@@ -25,24 +26,62 @@ def get_version(package_name):
     return ''
 
 
+def find_package_data(patterns):
+    package_data = {}
+    for pattern in patterns:
+        package, subpattern = pattern.split('/', 1)
+        matched = glob.glob(pattern, recursive=True)
+        package_data.setdefault(package, []).extend([
+            # We need the paths relative to their package.
+            path.split('/', 1)[1] for path in matched
+        ])
+    return package_data
+
+
 class BuildWithMakefile(build_py.build_py):
     """Custom 'build' command that runs 'make build' first."""
     def run(self):
-        subprocess.check_call(['make', 'update-js'])
-        subprocess.check_call(['make', 'build'])
-        if sys.version_info[0] < 3:
-            # Under Python 2.x, build_py is an old-style class.
-            return build_py.build_py.run(self)
+        # Ensure the checked-out folder comes first.
+        # We install the project as `pip install -e .`, but zest
+        # will assemble the bdist_wheel from a temporary location;
+        # this makes sure that the module picked as DJANGO_SETTINGS_MODULE
+        # is the file from the temporary location, and all files get written
+        # within that temporary location, and not the original git checkout.
+
+        env = dict(os.environ)
+        env['PYTHONPATH'] = ':'.join(
+            [
+                os.path.dirname(__file__)
+            ] + env.get('PYTHONPATH', '').split(':')
+        )
+        subprocess.check_call(['make', 'build'], env=env)
+
+        # Recompute package data
+        self.package_data = find_package_data(PACKAGE_DATA_PATTERNS)
+
+        # Override the cached set of data_files.
+        self.data_files = self._get_data_files()
         return super().run()
 
 
 PACKAGE = 'xelpaste'
+PACKAGE_DATA_PATTERNS = [
+    'xelpaste/assets/**/*',
+    'xelpaste/static/**/*',
+    'xelpaste/locale/**/*.mo',
+]
+
+
 
 
 setup(
     # Contents
     name=PACKAGE,
     packages=find_packages(exclude=['dev', 'tests*']),
+
+    # Ref: https://stackoverflow.com/questions/24347450/how-do-you-add-additional-files-to-a-wheel/49501350#49501350
+    # Yep, the Python docs are false here.
+    package_data=find_package_data(PACKAGE_DATA_PATTERNS),
     include_package_data=True,
     scripts=['bin/xelpastectl'],
     cmdclass={'build_py': BuildWithMakefile},

@@ -65,9 +65,6 @@
         <a class="btn snippet-diff-trigger" href="#snippet-diff"><i class="icon-search"></i> {% trans "Compare Snippets" %}</a>
         {% endif %}
         <a class="btn" href="{% url "snippet_details_raw" snippet.secret_id %}"><i class="icon-align-left"></i> {% trans "View Raw" %}</a>
-        {% if snippet.lexer != 'text' %}
-        <a class="btn" href="#" id="toggleWordwrap">Wordwrap</a>
-        {% endif %}
     </div>
 
     {% if snippet.expire_type == 3 %}
@@ -96,10 +93,18 @@
       </div>
     {% elif snippet.lexer == 'text' %}
     <div class="snippet-rendered">
-        <pre>{{ snippet.content|linebreaksbr }}</pre>
+      <div id="snippet-content" class="well {% if wordwrap %}wordwrap{% endif %}">{{ snippet.content | linebreaksbr }}</div>
     </div>
     {% else %}
-        {% include "libpaste/snippet_pre.html" %}
+          {% include "libpaste/snippet_pre.html" with wordwrap=wordwrap %}
+      <div class="btn-group"><div class="btn btn-default" style="padding-top: 0px; padding-bottom: 0px">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" id="toggleWordwrap" {% if wordwrap %}checked{% endif %}>
+            Wrap long lines
+          </label>
+        </div>
+        </div></div>
     {% endif %}
 
     <!-- ======================================================================
@@ -202,8 +207,7 @@ jQuery(function($) {
        Line Highlighting
     ------------------------------------------------------------------------ */
     $('#toggleWordwrap').click(function(e){
-        e.preventDefault();
-        $('.code').toggleClass('wordwrap');
+        $('#snippet-content').toggleClass('wordwrap');
     });
 });
 </script>

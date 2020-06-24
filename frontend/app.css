@@ -221,8 +221,7 @@ div.tree div.submit input{
 }
 
 .code.wordwrap {
-    overflow: auto;
-    white-space: nowrap;
+    white-space: pre-wrap;
 }
 
 .code ol {

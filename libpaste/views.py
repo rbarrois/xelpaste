@@ -126,7 +126,7 @@ def snippet_details(request, snippet_id, template_name='libpaste/snippet_details
         'lexers': LEXER_LIST,
         'lines': range(snippet.get_linecount()),
         'tree': tree,
-        'wordwrap': 'wordwrap' in request.GET,
+        'wordwrap': snippet.lexer in LEXER_WORDWRAP,
         'page': 'snippet_details',
     })
 

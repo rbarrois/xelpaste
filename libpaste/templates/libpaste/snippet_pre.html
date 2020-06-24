@@ -1,1 +1,1 @@
-{% load libpaste_tags %}<div class="code"><ol>{% for line in snippet|highlight %}<li id="{{ forloop.counter }}">{{ line|safe|default:"&nbsp;" }}</li>{% endfor %}</ol></div>
+{% load libpaste_tags %}<div id="snippet-content" class="code {% if wordwrap %}wordwrap{% endif %}"><ol>{% for line in snippet|highlight %}<li id="{{ forloop.counter }}">{{ line|safe|default:"&nbsp;" }}</li>{% endfor %}</ol></div>

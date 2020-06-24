@@ -63,10 +63,10 @@ setup(
     # Dependencies
     install_requires=[
         'Django>=2.0,<3.0',
-        'django-mptt>=0.9.1,<0.10',
-        'pygments>=2.2.0,<2.3',
-        'django-appconf>=1.0.1,<1.1',
-        'django-sendfile>=0.3.9,<0.4',
+        'django-mptt>=0.9.1',
+        'pygments>=2.2.0',
+        'django-appconf>=1.0.1',
+        'django-sendfile2',
         'getconf>=1.3.0,<2',
     ],
     tests_require=[

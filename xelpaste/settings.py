@@ -176,7 +176,7 @@ else:
 
 MEDIA_ROOT = config.get('uploads.dir', _default_media)
 LIBPASTE_UPLOAD_TO = 'snippets'
-SENDFILE_BACKEND = 'sendfile.backends.%s' % config.get('uploads.serve', 'simple')
+SENDFILE_BACKEND = 'django_sendfile.backends.%s' % config.get('uploads.serve', 'simple')
 SENDFILE_ROOT = os.path.join(MEDIA_ROOT, LIBPASTE_UPLOAD_TO)
 SENDFILE_URL = config.get('uploads.internal_url', '/uploads/')
 

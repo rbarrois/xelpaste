@@ -7,7 +7,7 @@ import difflib
 import json
 import os
 
-import sendfile
+import django_sendfile as sendfile
 
 from django.shortcuts import render, get_object_or_404
 from django.http import (Http404, HttpResponseRedirect, HttpResponseBadRequest,

@@ -155,10 +155,9 @@ h1, h2, h3, h4 {
 
 .snippet-rendered {
     color: #666;
-    font-size: 16px;
-    line-height: 24px;
-    max-width: 620px;
-    font-family: Helvetica, FreeSerif, serif;
+    font-size: 14px;
+    line-height: 22px;
+    max-width: 80em;
     font-weight: 300;
 }
 
@@ -212,7 +211,9 @@ div.tree div.submit input{
 ---------------------------------------------------------------------------- */
 
 .code {
-    background: #232829;
+    font-size: 14px;
+    line-height: 22px;
+    background: #131819;
     color: #f8f8f2;
     padding: 20px 30px !important;
     border-radius: 0;

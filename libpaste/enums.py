@@ -25,7 +25,8 @@ EXPIRE_ONE_MONTH = 3600 * 24 * 30
 # The list of lexers. Its not worth to autogenerate this. See above how to
 # retrieve this.
 DEFAULT_LEXER_LIST = (
-    ('text', 'Text'),
+    ('text', "Text (preformatted)"),
+    ('freetext', "Text (not code)"),
     ('text', '----------'),
     ('abap', 'ABAP'),
     ('apacheconf', 'ApacheConf'),
@@ -87,7 +88,8 @@ DEFAULT_LEXER_LIST = (
     ('tcl', 'Tcl'),
     ('tcsh', 'Tcsh'),
     ('tex', 'TeX'),
-    ('text', 'Text'),
+    ('text', 'Text (Preformatted)'),
+    ('freetext', "Text (non-code)"),
     ('vb.net', 'VB.net'),
     ('vim', 'VimL'),
     ('xml', 'XML'),

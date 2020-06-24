@@ -32,7 +32,7 @@ class LibPasteConf(appconf.AppConf):
     # Lexer
     LEXER_DEFAULT = 'python'
     LEXER_LIST = enums.DEFAULT_LEXER_LIST
-    LEXER_WORDWRAP = ('text', 'rst')
+    LEXER_WORDWRAP = ('freetext', 'text', 'rst')
 
     # Snippets
     SLUG_LENGTH = 4

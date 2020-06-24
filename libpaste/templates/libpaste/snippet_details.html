@@ -91,12 +91,18 @@
       <a href="{% url 'snippet_details_raw' snippet.secret_id %}"><span class="glyphicon glyphicon-download"></span> {% trans "Download" %}</a>
       {% endif %}
       </div>
-    {% elif snippet.lexer == 'text' %}
+    {% elif snippet.lexer == 'freetext' %}
     <div class="snippet-rendered">
       <div id="snippet-content" class="well {% if wordwrap %}wordwrap{% endif %}">{{ snippet.content | linebreaksbr }}</div>
     </div>
     {% else %}
+      {% if snippet.lexer == 'text' %}
+      <div class="snippet-rendered">
+        <pre id="snippet-content" class="code {% if wordwrap %}wordwrap{% endif %}">{{ snippet.content|linebreaksbr }}</pre>
+      </div>
+      {% else %}
           {% include "libpaste/snippet_pre.html" with wordwrap=wordwrap %}
+      {% endif %}
       <div class="btn-group"><div class="btn btn-default" style="padding-top: 0px; padding-bottom: 0px">
         <div class="checkbox">
           <label>

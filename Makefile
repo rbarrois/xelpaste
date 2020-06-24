@@ -1,50 +1,123 @@
 # VARS
 # ====
 
-NODE_BINDIR = $(abspath ./node_modules/.bin)
+PACKAGE = xelpaste
+EXTRA_PACKAGES = libpaste
+PROJECT_DIR = xelpaste
+
+GETCONF_PREFIX = $(shell echo $(PACKAGE) | tr '[a-z]' '[A-Z]')
+
+# JS variables
+# ------------
+
+WEBPACK = npx webpack
+
+FRONTEND_DIR = frontend
+
+FRONTEND_DIST_DIR = $(PROJECT_DIR)/static/$(PACKAGE)
+
+APP_JS_FILES = $(shell find $(FRONTEND_DIR) -name '*.js')
+APP_CSS_FILES = $(shell find $(FRONTEND_DIR) -name '*.css')
+
+NPM_INSTALL_SENTINEL = .success-npm-install
+
+
+# Django variables
+# ----------------
+
 MANAGE_PY = python manage.py
+DJANGO_ADMIN = django-admin.py
+PO_FILES = $(shell find $(PACKAGE) $(EXTRA_PACKAGES) -name '*.po')
+MO_FILES = $(PO_FILES:.po=.mo)
 
-# JS toolchain: browserify concats, exorcist extracts maps, uglify minifies
-BROWSERIFY = $(NODE_BINDIR)/browserify
-UGLIFY = $(NODE_BINDIR)/uglifyjs
-EXORCIST = $(NODE_BINDIR)/exorcist
-EXORCIST_OPTIONS = --base $(abspath .)
+DJANGO_ASSETS_DIR = $(PROJECT_DIR)/assets
 
-# CSS toolchain: node-sass compiles, cleancss minifies
-REWORK = $(NODE_BINDIR)/rework-npm
-CLEANCSS = $(NODE_BINDIR)/cleancss
-
-JS_LIBS = bootstrap jquery typeahead
-BOOSTRAP_SRC = $(abspath ./node_modules/bootstrap/dist)
-
-APP_DIR = frontend
-DIST_DIR = xelpaste/static/xelpaste
-BUILD_DIR = build/frontend
-PUB_DIR = xelpaste/assets
-DEPFILES = package.json
-
-APP_JS_FILES = $(shell find $(APP_DIR) -name '*.js')
-LIB_CSS_FILES = $(BOOSTRAP_SRC)/css/bootstrap.css
-APP_CSS_FILES = $(shell find $(APP_DIR) -name '*.css')
-FONTS_SRC_FILES = $(shell find $(BOOSTRAP_SRC)/fonts -type f)
-FONTS_FILES = $(FONTS_SRC_FILES:$(BOOSTRAP_SRC)/%=%)
-FONTS_DST_FILES = $(addprefix $(DIST_DIR)/, $(FONTS_FILES))
+# Sentinel file: touch it when `collectstatic` has run, depend on sources for it.
+DJANGO_ASSETS_SENTINEL = .success-collectstatic
 
 
-default: build
+# Build
+# =====
+
+.DEFAULT_GOAL := build
+
+build: $(MO_FILES) $(DJANGO_ASSETS_SENTINEL)
+
+
+JS_TARGETS = app.js
+
+CSS_LIBS = bootstrap.css bootstrap.css.map
+CSS_TARGETS = styles.css $(CSS_LIBS)
+NPM_CSS_SOURCES = $(addprefix node_modules/bootstrap/dist/css/,$(CSS_LIBS))
+
+FONTS = glyphicons-halflings-regular
+FONT_EXTENSIONS = eot woff2 woff ttf svg
+FONT_FILES = $(foreach ext,$(FONT_EXTENSIONS),$(addsuffix .$(ext),$(FONTS)))
+NPM_FONT_SOURCES = $(addprefix node_modules/bootstrap/dist/fonts/,$(FONT_FILES))
+
+FRONTEND_TARGETS = $(addprefix $(FRONTEND_DIST_DIR)/js/,$(JS_TARGETS)) $(addprefix $(FRONTEND_DIST_DIR)/css/,$(CSS_TARGETS)) $(addprefix $(FRONTEND_DIST_DIR)/fonts/,$(FONT_FILES))
+
+$(DJANGO_ASSETS_SENTINEL): $(FRONTEND_TARGETS)
+	$(GETCONF_PREFIX)_APP_MODE=dist $(MANAGE_PY) collectstatic --noinput --verbosity 2
+	touch $@
+
+$(FRONTEND_DIST_DIR)/js/%: $(FRONTEND_DIR)/% webpack.config.js $(NPM_INSTALL_SENTINEL)
+	@# Build a module named 'app' from `app.js`
+	$(WEBPACK) --entry $(basename $(notdir $@))=./$< --output-path $(dir $@)
+
+# Copy styles and fonts directly
+$(FRONTEND_DIST_DIR)/css/styles.css: $(FRONTEND_DIR)/app.css
+	mkdir --parents $(dir $@)
+	cp $< $@
+
+$(FRONTEND_DIST_DIR)/css/%: node_modules/bootstrap/dist/css/%
+	mkdir --parents $(dir $@)
+	cp $< $@
+
+$(FRONTEND_DIST_DIR)/fonts/%: node_modules/bootstrap/dist/fonts/%
+	mkdir --parents $(dir $@)
+	cp $< $@
+
+# All NPM-based files, and the "NPM install has run" sentinel file, depend on
+# package-lock.json as a proxy / side-effect of `npm install`.
+$(NPM_FONT_SOURCES) $(NPM_CSS_SOURCES) $(NPM_INSTALL_SENTINEL): package-lock.json
+	touch $(NPM_INSTALL_SENTINEL)
+	touch $(NPM_FONT_SOURCES) $(NPM_CSS_SOURCES)
+
+package-lock.json: package.json
+	npm install
+
+
+# Run DJANGO_ADMIN compilemessages for checkout/<project>/locale/<lang>/LC_MESSAGES/<name>.po
+# Must run from checkout/<project>
+%.mo: %.po
+	cd $(abspath $(dir $<)/../../..) && $(DJANGO_ADMIN) compilemessages
+
+.PHONY: build
+
+
+# Clean
+# =====
+
 
 clean:
-	rm -rf $(BUILD_DIR)/* $(DIST_DIR)/* $(PUB_DIR)/*
-	find $(PACKAGE_DIR) -type f -name '*.pyc' -delete
+	-rm --recursive $(FRONTEND_DIST_DIR) $(DJANGO_ASSETS_SENTINEL) $(DJANGO_ASSETS_DIR)
+	find $(PROJECT_DIR) -type f -name '*.pyc' -delete
 
-.PHONY: default clean
+distclean: clean
+	-rm --recursive --force node_modules/
+	-rm package-lock.json
+
+.PHONY: clean distclean
+
+
 
 
 # QUALITY
 # =======
 
 test: build
-	$(MANAGE_PY) test libpaste xelpaste
+	$(MANAGE_PY) test $(PACKAGE) $(EXTRA_PACKAGES)
 	check-manifest
 
 .PHONY: test
@@ -55,6 +128,7 @@ test: build
 
 update: update-js
 	pip install --upgrade -r requirements.txt
+
 update-js:
 	npm install
 
@@ -64,65 +138,10 @@ release:
 
 .PHONY: update update-js release
 
-# BUILDING
-# ========
-
-build: build-vendorjs build-appjs build-appcss build-fonts
-	XELPASTE_APP_MODE=dist $(MANAGE_PY) collectstatic --noinput --verbosity 2
-
-build-vendorjs: $(DIST_DIR)/js/vendor.js
-
-build-appjs: $(DIST_DIR)/js/app.js
-
-build-appcss: $(DIST_DIR)/css/app.css
-
-build-fonts: $(FONTS_DST_FILES)
-
-$(DIST_DIR)/fonts/%: $(BOOSTRAP_SRC)/fonts/%
-	@mkdir -p $$(dirname $@)
-	cp $< $@
-
-$(DIST_DIR)/js/%.js: $(BUILD_DIR)/%.js $(DEPFILES)
-	@mkdir -p $$(dirname $@)
-	$(UGLIFY) $< --output $@ \
-	    --mangle --compress \
-	    --source-map $@.map --source-map-url $(notdir $@).map --source-map-include-sources --in-source-map $<.map
-
-$(DIST_DIR)/css/%.css: $(BUILD_DIR)/%.css $(DEPFILES)
-	@mkdir -p $$(dirname $@)
-	$(CLEANCSS) $< \
-	    --source-map \
-	    --skip-rebase \
-	    --output $@
-
-$(BUILD_DIR)/app.js: $(APP_DIR)/main.js $(APP_JS_FILES) $(DEPFILES)
-	@mkdir -p $$(dirname $@)
-	$(BROWSERIFY) --entry $< --debug --transform reactify \
-	    $(addprefix --external=,$(JS_LIBS)) \
-	    | $(EXORCIST) $(EXORCIST_OPTIONS) $@.map \
-	    > $@
-
-$(BUILD_DIR)/vendor.js: $(DEPFILES)
-	@mkdir -p $$(dirname $@)
-	$(BROWSERIFY) --debug \
-	    $(addprefix --require=,$(JS_LIBS)) \
-	    | $(EXORCIST) $(EXORCIST_OPTIONS) $@.map \
-	    > $@
-
-$(BUILD_DIR)/app.css: $(APP_CSS_FILES) $(DEPFILES)
-	@mkdir -p $$(dirname $@)
-	$(REWORK) $< --sourcemap \
-	    | $(EXORCIST) $(EXORCIST_OPTIONS) $@.map \
-	    | grep -v 'bootstrap.css.map' \
-	    > $@
-
-.PHONY: build build-appjs build-vendorjs build-fonts build-appcss
-
-
 # MISC
 # ====
 
-runserver:
-	cd dist/ && python3 -m http.server
+runserver: $(DJANGO_ASSETS_SENTINEL)
+	$(MANAGE_PY) runserver
 
 .PHONY: runserver

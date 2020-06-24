@@ -1,14 +1,23 @@
-include README.rst LICENSE CHANGELOG
-include crontab requirements.txt
-
+# Source code
 graft xelpaste
 graft libpaste
 global-exclude *.py[cod] __pycache__
 global-exclude .*.swp *.*~
 
-prune dev
+# Docs and packaging
+include README.rst LICENSE CHANGELOG
+include crontab requirements.txt example_settings.ini
 graft docs
+
+# Development
+prune dev
+include .coveragerc
+include Makefile manage.py runtests.py
+
+# Frontend
 graft frontend
 prune node_modules
-include .coveragerc 
-include example_settings.ini Makefile manage.py package.json runtests.py
+prune xelpaste/assets
+prune xelpaste/static
+include package.json webpack.config.js
+exclude package-lock.json

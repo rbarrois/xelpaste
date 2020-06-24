@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 from datetime import timedelta
+import os.path
 
 from django.core import management
 from django.urls import reverse
@@ -17,6 +18,10 @@ class SnippetTestCase(TestCase):
     def setUp(self):
         self.client = Client()
         self.new_url = reverse('snippet_new')
+        self.upload_url = reverse('snippet_upload')
+        self.EXAMPLE_IMAGE_PATH = os.path.join(
+            os.path.dirname(__file__), 'testdata', 'image.png',
+        )
 
     def valid_form_data(self):
         return {
@@ -24,6 +29,13 @@ class SnippetTestCase(TestCase):
             'lexer': settings.LIBPASTE_LEXER_DEFAULT,
             'expires': settings.LIBPASTE_EXPIRE_DEFAULT,
             'author': "Someone",
+        }
+
+    def valid_upload_data(self):
+        return {
+            'expires': settings.LIBPASTE_EXPIRE_DEFAULT,
+            'author': "Someone",
+            'file': open(self.EXAMPLE_IMAGE_PATH, 'rb'),
         }
 
 
@@ -74,6 +86,27 @@ class SnippetTestCase(TestCase):
         # the id using {{ snippet }}
         snippet = Snippet.objects.all()[0]
         self.assertTrue(snippet.secret_id in snippet.__unicode__())
+
+    def test_new_upload(self):
+        # Simple GET
+        response = self.client.get(self.upload_url, follow=True)
+
+        # POST data
+        data = self.valid_upload_data()
+        response = self.client.post(self.upload_url, data, follow=True)
+        data['file'].close()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Snippet.objects.count(), 1)
+
+        snippet = Snippet.objects.get()
+        self.assertContains(response, 'img src="/{}/raw"'.format(snippet.secret_id))
+
+        # Get raw data
+        response = self.client.get(reverse('snippet_details_raw', kwargs=dict(snippet_id=snippet.secret_id)))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'image/png')
+        with open(self.EXAMPLE_IMAGE_PATH, 'rb') as f:
+            self.assertEqual(f.read(), response.content)
 
     def test_new_snippet_custom_lexer(self):
         # You can pass a lexer key in GET.l
